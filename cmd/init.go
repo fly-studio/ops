@@ -242,13 +242,13 @@ func optimizeSystem(osInfo *os.Data) {
 var spaceRegexp = regexp.MustCompile(`\s+`)
 var lineRegexp = regexp.MustCompile(`\n+`)
 
-// 下载更新s3存储上的相关工具，文件列表：https://s3.load.cool:8000/linux-software.txt
+// 下载更新s3存储上的相关工具，文件列表：https://s3.load.cool:8000/software/linux-software.txt
 func downloadTools() {
 	logger.Sugar.Infoln("检查安装os相关command")
 	_ = utils.MustMakeDir("/usr/libexec/docker/cli-plugins/")
 	time.Sleep(time.Duration(1) * time.Second)
 
-	_content := utils.HttpGet("https://s3.load.cool:8000/linux-software.txt")
+	_content := utils.HttpGet("https://s3.load.cool:8000/software/linux-software.txt")
 	if _content == "" {
 		logger.Sugar.Errorln("获取文件列表失败")
 		return
@@ -574,10 +574,7 @@ func installDocker(osInfo *os.Data) {
     },
     "max-concurrent-downloads": 10,
     "max-concurrent-uploads": 10,
-    "storage-driver": "overlay2",
-    "storage-opts": [
-        "overlay2.override_kernel_check=true"
-    ]
+    "storage-driver": "overlay2"
 }`, mtu)
 	_, err := script.Echo(dockerConf).WriteFile("/etc/docker/daemon.json")
 	if err != nil {
