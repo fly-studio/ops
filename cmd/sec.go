@@ -15,8 +15,8 @@ import (
 	"strings"
 )
 
-func secDetect() *cobra.Command {
-	cmd := &cobra.Command{
+func buildSecDetect() *cobra.Command {
+	secDetectCmd := &cobra.Command{
 		Use:     "detect-shell",
 		Aliases: []string{"detect", "d"},
 		Short:   "检测反弹shell等",
@@ -35,13 +35,13 @@ sk sec detect-shell -h
 			}
 		},
 	}
-	cmd.Flags().BoolP("kill", "k", false, "后台运行并Kill进程,默认false,请谨慎使用")
+	secDetectCmd.Flags().BoolP("kill", "k", false, "后台运行并Kill进程,默认false,请谨慎使用")
 
-	return cmd
+	return secDetectCmd
 }
 
-func secCmd() *cobra.Command {
-	var cmd = &cobra.Command{
+func buildSecCmd() *cobra.Command {
+	var secCmd = &cobra.Command{
 		Use:   "sec",
 		Short: "安全相关工具",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -51,9 +51,9 @@ func secCmd() *cobra.Command {
 		},
 	}
 
-	cmd.AddCommand(secDetect())
+	secCmd.AddCommand(buildSecDetect())
 
-	return cmd
+	return secCmd
 }
 
 type Detect struct {

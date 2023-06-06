@@ -20,11 +20,11 @@ import (
 	"time"
 )
 
-func initCmd() *cobra.Command {
+func buildInitCmd() *cobra.Command {
 	var osInfo *os.Data
 
-	cmd := &cobra.Command{
-		Use:   "init [Commands...]",
+	initCmd := &cobra.Command{
+		Use:   "init [Commands...] -x <Command> -x <Command>",
 		Short: "初始化OS,支持CentOS 6/7/8,Ubuntu 18/20/22",
 		Long: `用法: init [Commands...]:
 Commands:
@@ -33,6 +33,7 @@ Commands:
     time            安装chrony、设置时区Asia/Shanghai
     pkg             安装YUM或APT源仓库及依赖工具
     docker          初始化系统及安装docker
+	tools		    安装常用工具
     all             执行所有指令
 `,
 		Args: cobra.MinimumNArgs(1),
@@ -43,7 +44,8 @@ Commands:
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 
-			allOptions := []string{"kernel", "system", "time", "pkg", "docker", "cmd"}
+			allOptions := []string{"kernel", "system", "time", "pkg", "docker", "tools"}
+			except, _ := cmd.Flags().GetStringSlice("except")
 
 			// 如果参数包含all,则执行所有指令
 			if slices.Contains(args, "all") {
@@ -56,6 +58,7 @@ Commands:
 						return
 					}
 				}
+
 				// 按照allOptions的顺序排序
 				sort.Slice(args, func(i, j int) bool {
 					return slices.Index(allOptions, args[i]) < slices.Index(allOptions, args[j])
@@ -63,6 +66,11 @@ Commands:
 			}
 
 			for _, option := range args {
+				// 排除不需要执行的指令
+				if slices.Contains(except, option) {
+					continue
+				}
+
 				switch option {
 				case "kernel":
 					updateKernel(osInfo)
@@ -85,9 +93,9 @@ Commands:
 		},
 	}
 
-	cmd.Flags().StringSliceP("except", "e", []string{}, "当Commands为all时，排除这些指令")
+	initCmd.Flags().StringSliceP("except", "x", []string{}, "排除这些指令，比如排除這2個：-x docker -x tools")
 
-	return cmd
+	return initCmd
 }
 
 func checkGOOS() *os.Data {

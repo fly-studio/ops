@@ -13,9 +13,9 @@ func Execute() {
 		Long:    `ops是用于进行相关运维工作的CLI工具`,
 	}
 
-	rootCmd.AddCommand(initCmd())
-	//rootCmd.AddCommand(secCmd())
-	//secCmd.AddCommand(secDetect)
+	rootCmd.AddCommand(buildInitCmd())
+	//rootCmd.AddCommand(buildSecCmd())
+	//buildSecCmd.AddCommand(buildSecDetect)
 
 	err := rootCmd.Execute()
 	if err != nil {
