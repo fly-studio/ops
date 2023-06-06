@@ -32,7 +32,7 @@ Commands:
     system          优化系统设置
     time            安装chrony、设置时区Asia/Shanghai
     pkg             安装YUM或APT源仓库及依赖工具
-    docker          初始化系统及安装docker
+    docker          安装docker
 	tools		    安装常用工具
     all             执行所有指令
 `,
