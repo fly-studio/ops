@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"golang.org/x/exp/slices"
 	"net"
 	nos "os"
 	"os/exec"
@@ -18,6 +16,9 @@ import (
 	"stkey/utils"
 	"strings"
 	"time"
+
+	"github.com/spf13/cobra"
+	"golang.org/x/exp/slices"
 )
 
 func buildInitCmd() *cobra.Command {
@@ -275,7 +276,7 @@ func downloadTools() {
 			} else {
 				// 如果文件存在，但是md5不匹配，下载
 				currentMd5 := utils.MD5File(_path)
-				if strings.EqualFold(currentMd5, _md5) {
+				if !strings.EqualFold(currentMd5, _md5) {
 					logger.Sugar.Infoln("MD5不匹配，开始下载：" + _url + " --->" + _path)
 					if err := utils.DownloadFile(_path, _url); err != nil {
 						logger.Sugar.Errorln(err)
